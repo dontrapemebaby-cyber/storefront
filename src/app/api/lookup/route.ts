@@ -9,7 +9,7 @@
 // anon không đọc trực tiếp được bảng nào.
 import { NextResponse } from 'next/server';
 import { lookupSchema } from '@/lib/validation/order';
-import { lookupRequest } from '@/lib/data/orders';
+import { lookupRequest, LookupRequestError } from '@/lib/data/orders';
 import { getRequestContext } from '@/lib/security/request-context';
 import { allow } from '@/lib/security/rate-limit';
 import { readJson } from '@/app/api/_guard';
@@ -31,16 +31,37 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: parsed.error.issues[0]?.message ?? 'Dữ liệu không hợp lệ.' }, { status: 400 });
   }
 
-  const result = await lookupRequest(parsed.data.code.toUpperCase(), parsed.data.phone);
+  try {
+    const result = await lookupRequest(parsed.data.code.toUpperCase(), parsed.data.phone);
 
-  if (!result) {
-    // Không nói rõ "sai mã" hay "sai số điện thoại" — nói rõ là chỉ điểm cho
-    // người dò tìm biết họ đã đoán đúng một nửa.
+    if (!result) {
+      // Không nói rõ "sai mã" hay "sai số điện thoại" — nói rõ là chỉ điểm cho
+      // người dò tìm biết họ đã đoán đúng một nửa.
+      return NextResponse.json(
+        { error: 'Không tìm thấy yêu cầu khớp với mã và số điện thoại này. Vui lòng kiểm tra lại.' },
+        { status: 404 },
+      );
+    }
+
+    return NextResponse.json({ ok: true, result });
+  } catch (error) {
+    if (error instanceof LookupRequestError) {
+      return NextResponse.json(
+        {
+          error:
+            error.kind === 'configuration'
+              ? 'Hệ thống tra cứu chưa được đồng bộ cấu hình. Nhà in đang xử lý, vui lòng thử lại sau.'
+              : 'Hệ thống tra cứu đang tạm gián đoạn. Vui lòng thử lại sau.',
+          code: error.kind === 'configuration' ? 'LOOKUP_CONFIG_ERROR' : 'LOOKUP_DATABASE_ERROR',
+        },
+        { status: 503 },
+      );
+    }
+
+    console.error('[lookup] lỗi không xác định:', error);
     return NextResponse.json(
-      { error: 'Không tìm thấy yêu cầu khớp với mã và số điện thoại này. Vui lòng kiểm tra lại.' },
-      { status: 404 },
+      { error: 'Hệ thống tra cứu đang tạm gián đoạn. Vui lòng thử lại sau.' },
+      { status: 503 },
     );
   }
-
-  return NextResponse.json({ ok: true, result });
 }

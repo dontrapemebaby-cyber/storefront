@@ -67,7 +67,7 @@ export function LookupForm() {
         body: JSON.stringify({ code: code.trim(), phone: phone.trim() }),
       });
 
-      const body = (await res.json()) as { error?: string; result?: LookupResult };
+      const body = (await res.json()) as { error?: string; code?: string; result?: LookupResult };
       if (!res.ok || !body.result) {
         setError(body.error ?? 'Không tra cứu được. Vui lòng thử lại.');
         return;

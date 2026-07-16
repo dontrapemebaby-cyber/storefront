@@ -188,3 +188,15 @@ Website vẫn chạy đầy đủ khi CSDL trống — `src/lib/data/defaults.ts
   của khách để dashboard đếm đúng người.
 - **Giá website tự tính được ghi vào ghi chú của RFQ** để nhân viên đối chiếu. Dashboard
   không có trường giá riêng cho việc này.
+
+## Migration 0009 — tra cứu đơn và trang sửa sản phẩm
+
+Nếu Supabase production đã chạy đến `0008_storefront.sql`, chạy tiếp:
+
+```text
+supabase/migrations/0009_lookup_and_product_editor.sql
+```
+
+Migration này chuẩn hóa số điện thoại khi tra cứu (`0...`, `84...`, `+84...`, `0084...`) để đơn cũ và mới đều tìm được. Sau khi chạy migration, deploy lại storefront.
+
+Nếu API tra cứu trả `LOOKUP_CONFIG_ERROR`, kiểm tra `STOREFRONT_RPC_SECRET` trên Netlify và hash `storefront_rpc` trong bảng `storefront_secrets` phải được tạo từ cùng một chuỗi.

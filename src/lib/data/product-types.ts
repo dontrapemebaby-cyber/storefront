@@ -20,23 +20,31 @@ export interface ProductType {
 }
 
 export async function getProductTypes(): Promise<ProductType[]> {
-  const supabase = await createSupabaseServerClient();
+  try {
+    const supabase = await createSupabaseServerClient();
 
-  const { data, error } = await supabase
-    .from('product_types')
-    .select('code, name_vi, needs_survey, can_quote_remote')
-    .eq('is_active', true)
-    .order('sort_order', { ascending: true });
+    const { data, error } = await supabase
+      .from('product_types')
+      .select('code, name_vi, needs_survey, can_quote_remote')
+      .eq('is_active', true)
+      .is('deleted_at', null)
+      .order('sort_order', { ascending: true });
 
-  if (error) {
-    console.error('[product-types] không đọc được từ dashboard:', error);
+    if (error) {
+      console.error('[product-types] không đọc được từ dashboard:', { code: error.code, message: error.message });
+      return [];
+    }
+
+    return (data as { code: string; name_vi: string; needs_survey: boolean; can_quote_remote: boolean }[]).map((row) => ({
+      code: row.code,
+      nameVi: row.name_vi,
+      needsSurvey: row.needs_survey,
+      canQuoteRemote: row.can_quote_remote,
+    }));
+  } catch (error) {
+    // Không để một lỗi mạng tạm thời ở bảng product_types làm sập cả trang sửa
+    // sản phẩm. Trang vẫn mở với loại hiện tại và admin có thể thử tải lại.
+    console.error('[product-types] truy vấn bị gián đoạn:', error);
     return [];
   }
-
-  return (data as { code: string; name_vi: string; needs_survey: boolean; can_quote_remote: boolean }[]).map((row) => ({
-    code: row.code,
-    nameVi: row.name_vi,
-    needsSurvey: row.needs_survey,
-    canQuoteRemote: row.can_quote_remote,
-  }));
 }

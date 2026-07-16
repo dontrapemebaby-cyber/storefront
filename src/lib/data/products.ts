@@ -56,6 +56,28 @@ export async function getRelatedProducts(product: Product, limit = 3): Promise<P
 }
 
 /** Dùng cho trang quản trị: thấy cả sản phẩm chưa publish (RLS cho staff đọc). */
+
+/** Đọc đúng một sản phẩm cho trang sửa. Không tải toàn bộ catalog chỉ để tìm id. */
+export async function getProductForAdmin(id: string): Promise<Product | null> {
+  try {
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
+      .from('storefront_products')
+      .select(PRODUCT_COLUMNS)
+      .eq('id', id)
+      .is('deleted_at', null)
+      .maybeSingle();
+
+    if (error) {
+      console.error('[products] admin không đọc được sản phẩm:', { code: error.code, message: error.message, id });
+      return null;
+    }
+    return data ? mapProduct(data as unknown as ProductRow) : null;
+  } catch (error) {
+    console.error('[products] truy vấn sản phẩm bị gián đoạn:', { id, error });
+    return null;
+  }
+}
 export async function getAllProductsForAdmin(): Promise<Product[]> {
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase

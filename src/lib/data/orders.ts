@@ -170,6 +170,16 @@ interface LookupRow {
  * Tra cứu bằng mã yêu cầu + số điện thoại. Phải khớp CẢ HAI: chỉ mã thôi thì
  * người khác đoán được mã là xem được đơn của bạn.
  */
+export class LookupRequestError extends Error {
+  constructor(
+    message: string,
+    public readonly kind: 'configuration' | 'database',
+  ) {
+    super(message);
+    this.name = 'LookupRequestError';
+  }
+}
+
 export async function lookupRequest(code: string, phone: string): Promise<LookupResult | null> {
   const supabase = createSupabaseAnonClient();
 
@@ -180,8 +190,12 @@ export async function lookupRequest(code: string, phone: string): Promise<Lookup
   });
 
   if (error) {
-    console.error('[orders] tra cứu thất bại:', error);
-    return null;
+    console.error('[orders] tra cứu thất bại:', { code: error.code, message: error.message });
+    const forbidden = error.message.includes('FORBIDDEN') || error.code === 'P0001';
+    throw new LookupRequestError(
+      forbidden ? 'Cấu hình tra cứu chưa đồng bộ.' : 'Không truy vấn được dữ liệu đơn hàng.',
+      forbidden ? 'configuration' : 'database',
+    );
   }
 
   const row = (Array.isArray(data) ? data[0] : data) as LookupRow | undefined;
