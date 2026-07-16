@@ -33,8 +33,8 @@ export function BrandForm({ initial }: { initial: BrandSettings }) {
         </Field>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="Logo (URL)" htmlFor="logoUrl" hint="Bỏ trống thì dùng logo mặc định." error={fieldErrors.logoUrl}>
-            <Input id="logoUrl" value={value.logoUrl} onChange={(e) => set('logoUrl', e.target.value)} placeholder="/logo.svg" />
+          <Field label="Logo (URL)" htmlFor="logoUrl" hint="Bỏ trống hoặc URL lỗi thì website tự dùng /logo.png đã tích hợp sẵn." error={fieldErrors.logoUrl}>
+            <Input id="logoUrl" value={value.logoUrl} onChange={(e) => set('logoUrl', e.target.value)} placeholder="/logo.png" />
           </Field>
           <Field label="Favicon (URL)" htmlFor="faviconUrl" error={fieldErrors.faviconUrl}>
             <Input id="faviconUrl" value={value.faviconUrl} onChange={(e) => set('faviconUrl', e.target.value)} />

@@ -3,12 +3,11 @@
 // Thanh điều hướng. Trên điện thoại thu về nút menu mở drawer bên phải.
 import * as React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Menu, Phone, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent } from '@/components/ui/modal';
-import { Logo } from '@/components/site/logo';
+import { BrandLogo } from '@/components/site/brand-logo';
 import { cn } from '@/lib/utils';
 import type { BrandSettings } from '@/types/storefront';
 
@@ -36,11 +35,7 @@ export function SiteHeader({ brand }: { brand: BrandSettings }) {
     <header className="sticky top-0 z-40 border-b border-line bg-canvas/85 backdrop-blur-md">
       <div className="container-content flex h-16 items-center justify-between gap-4 lg:h-[72px]">
         <Link href="/" className="flex shrink-0 items-center gap-2.5 rounded-token-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
-          {brand.logoUrl ? (
-            <Image src={brand.logoUrl} alt={brand.name} width={140} height={36} className="h-8 w-auto lg:h-9" priority />
-          ) : (
-            <Logo className="h-8 w-auto lg:h-9" />
-          )}
+          <BrandLogo src={brand.logoUrl} alt={brand.name} className="h-10 w-10 rounded-full lg:h-11 lg:w-11" priority />
           <span className="sr-only">{brand.name}</span>
         </Link>
 

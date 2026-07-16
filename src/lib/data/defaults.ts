@@ -8,8 +8,8 @@ import type { BrandSettings, HomeSettings, PaymentSettings, ThemeSettings } from
 
 export const DEFAULT_BRAND: BrandSettings = {
   name: 'Nhà In Trẻ',
-  logoUrl: '',
-  faviconUrl: '',
+  logoUrl: '/logo.png',
+  faviconUrl: '/favicon.png',
   slogan: 'Có file thì tải lên, chưa có file thì chúng tôi hỗ trợ thiết kế.',
   description: 'Nhà in tại Hà Nội cho quán, cửa hàng và thương hiệu nhỏ.',
   phone: '',

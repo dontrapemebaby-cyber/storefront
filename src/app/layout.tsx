@@ -35,7 +35,11 @@ export async function generateMetadata(): Promise<Metadata> {
       template: `%s | ${brand.name}`,
     },
     description: brand.description,
-    ...(brand.faviconUrl ? { icons: { icon: brand.faviconUrl } } : {}),
+    icons: {
+      icon: '/favicon.png',
+      shortcut: '/favicon.png',
+      apple: '/apple-touch-icon.png',
+    },
     openGraph: {
       type: 'website',
       locale: 'vi_VN',

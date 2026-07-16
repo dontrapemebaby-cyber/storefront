@@ -1,8 +1,7 @@
 // src/components/site/footer.tsx
 import Link from 'next/link';
-import Image from 'next/image';
 import { Clock, Facebook, Instagram, Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
-import { Logo } from '@/components/site/logo';
+import { BrandLogo } from '@/components/site/brand-logo';
 import type { BrandSettings } from '@/types/storefront';
 
 const PRODUCT_LINKS = [
@@ -36,11 +35,7 @@ export function SiteFooter({ brand }: { brand: BrandSettings }) {
       <div className="container-content py-14">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div className="space-y-4">
-            {brand.logoUrl ? (
-              <Image src={brand.logoUrl} alt={brand.name} width={140} height={36} className="h-9 w-auto" />
-            ) : (
-              <Logo className="h-9 w-auto" />
-            )}
+            <BrandLogo src={brand.logoUrl} alt={brand.name} className="h-16 w-16 rounded-full" />
 
             <p className="max-w-xs text-sm leading-relaxed text-muted">{brand.description}</p>
 
