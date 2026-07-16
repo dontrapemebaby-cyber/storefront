@@ -1,0 +1,137 @@
+@import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* --------------------------------------------------------------------------
+   Giá trị dự phòng. Layout sẽ ghi đè bằng CSS variables sinh từ cấu hình admin
+   (src/lib/theme.ts). Để ở đây để trang vẫn hiển thị đúng nếu CSDL chưa sẵn sàng.
+   -------------------------------------------------------------------------- */
+:root {
+  --sf-primary: 0 87 255;
+  --sf-primary-fg: 255 255 255;
+  --sf-accent: 236 0 140;
+  --sf-accent-fg: 255 255 255;
+  --sf-bg: 255 255 255;
+  --sf-fg: 16 17 20;
+  --sf-radius: 10px;
+  --sf-shadow: 0 1px 2px rgb(16 17 20 / 0.04), 0 4px 16px rgb(16 17 20 / 0.06);
+  --font-be-vietnam-pro: "Be Vietnam Pro";
+  --font-manrope: "Manrope";
+  --sf-font-heading: var(--font-be-vietnam-pro), system-ui, sans-serif;
+  --sf-font-body: var(--font-be-vietnam-pro), system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-canvas font-body text-ink antialiased;
+    font-feature-settings: 'cv02', 'cv03', 'cv04';
+  }
+
+  h1, h2, h3, h4, h5 {
+    @apply font-heading tracking-tight;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Focus nhìn thấy rõ trên mọi nền, kể cả khi admin đổi màu chủ đạo. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-canvas;
+  }
+
+  /* Tôn trọng cài đặt giảm chuyển động của hệ điều hành. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* Bỏ mũi tên tăng giảm của input số — khách nhập kích thước bằng bàn phím. */
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
+}
+
+@layer components {
+  .container-content {
+    @apply mx-auto w-full max-w-content px-5 sm:px-6 lg:px-8;
+  }
+
+  /* Chữ nhỏ in hoa dùng làm nhãn section. */
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.14em] text-primary;
+  }
+
+  /*
+    Dấu bế / dấu cắt xén — thứ có thật trên mọi bản in trước khi xén thành phẩm.
+    Dùng làm chi tiết nhận diện: bốn góc của khối "trim" có vạch cắt như bản in
+    thật. Đây là chi tiết duy nhất mang tính trang trí trên toàn site.
+  */
+  .trim-marks {
+    position: relative;
+  }
+  .trim-marks::before,
+  .trim-marks::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    pointer-events: none;
+    border-color: rgb(var(--sf-fg) / 0.28);
+  }
+  .trim-marks::before {
+    top: -1px;
+    left: -1px;
+    border-top: 1.5px solid;
+    border-left: 1.5px solid;
+  }
+  .trim-marks::after {
+    right: -1px;
+    bottom: -1px;
+    border-right: 1.5px solid;
+    border-bottom: 1.5px solid;
+  }
+
+  .skeleton {
+    @apply relative overflow-hidden bg-surface-strong;
+  }
+  .skeleton::after {
+    content: '';
+    @apply absolute inset-0 -translate-x-full;
+    background-image: linear-gradient(90deg, transparent, rgb(var(--sf-fg) / 0.05), transparent);
+    animation: shimmer 1.6s infinite;
+  }
+
+  /* Nội dung mô tả dài do admin nhập, hiển thị dạng văn bản có đoạn. */
+  .prose-vn {
+    @apply space-y-4 text-[15px] leading-[1.75] text-muted;
+  }
+  .prose-vn strong {
+    @apply font-semibold text-ink;
+  }
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
