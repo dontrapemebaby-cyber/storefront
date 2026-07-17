@@ -1,6 +1,16 @@
 // src/components/site/footer.tsx
+
 import Link from 'next/link';
-import { Clock, Facebook, Instagram, Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
+import {
+  Clock,
+  Facebook,
+  Instagram,
+  Mail,
+  MapPin,
+  MessageCircle,
+  Phone,
+} from 'lucide-react';
+
 import { BrandLogo } from '@/components/site/brand-logo';
 import type { BrandSettings } from '@/types/storefront';
 
@@ -34,36 +44,72 @@ export function SiteFooter({ brand }: { brand: BrandSettings }) {
     <footer className="mt-24 border-t border-line bg-surface">
       <div className="container-content py-14">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
-          <div className="space-y-4">
-            <BrandLogo src={brand.logoUrl} alt={brand.name} className="h-16 w-16 rounded-full" />
+          <div className="space-y-5">
+            {/* Logo footer lớn hơn */}
+            <Link
+              href="/"
+              aria-label={`Về trang chủ ${brand.name}`}
+              className="inline-flex rounded-token-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            >
+              <BrandLogo
+                src={brand.logoUrl}
+                alt={brand.name}
+                className="h-28 w-28 object-contain"
+              />
+            </Link>
 
-            <p className="max-w-xs text-sm leading-relaxed text-muted">{brand.description}</p>
+            <p className="max-w-xs text-sm leading-relaxed text-muted">
+              {brand.description}
+            </p>
 
             <ul className="space-y-2.5 text-sm">
               {brand.address && (
                 <li className="flex gap-2.5">
-                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-muted-soft" aria-hidden />
+                  <MapPin
+                    className="mt-0.5 h-4 w-4 shrink-0 text-muted-soft"
+                    aria-hidden
+                  />
                   <span className="text-muted">{brand.address}</span>
                 </li>
               )}
+
               {brand.workingHours && (
                 <li className="flex gap-2.5">
-                  <Clock className="mt-0.5 h-4 w-4 shrink-0 text-muted-soft" aria-hidden />
+                  <Clock
+                    className="mt-0.5 h-4 w-4 shrink-0 text-muted-soft"
+                    aria-hidden
+                  />
                   <span className="text-muted">{brand.workingHours}</span>
                 </li>
               )}
+
               {brand.phone && (
                 <li className="flex gap-2.5">
-                  <Phone className="mt-0.5 h-4 w-4 shrink-0 text-muted-soft" aria-hidden />
-                  <a href={`tel:${brand.phone}`} className="font-medium text-ink hover:text-primary">
+                  <Phone
+                    className="mt-0.5 h-4 w-4 shrink-0 text-muted-soft"
+                    aria-hidden
+                  />
+
+                  <a
+                    href={`tel:${brand.phone}`}
+                    className="font-medium text-ink hover:text-primary"
+                  >
                     {brand.phone}
                   </a>
                 </li>
               )}
+
               {brand.email && (
                 <li className="flex gap-2.5">
-                  <Mail className="mt-0.5 h-4 w-4 shrink-0 text-muted-soft" aria-hidden />
-                  <a href={`mailto:${brand.email}`} className="text-muted hover:text-primary">
+                  <Mail
+                    className="mt-0.5 h-4 w-4 shrink-0 text-muted-soft"
+                    aria-hidden
+                  />
+
+                  <a
+                    href={`mailto:${brand.email}`}
+                    className="text-muted hover:text-primary"
+                  >
                     {brand.email}
                   </a>
                 </li>
@@ -83,6 +129,7 @@ export function SiteFooter({ brand }: { brand: BrandSettings }) {
                     <Facebook className="h-4 w-4" aria-hidden />
                   </a>
                 )}
+
                 {brand.instagram && (
                   <a
                     href={brand.instagram}
@@ -94,6 +141,7 @@ export function SiteFooter({ brand }: { brand: BrandSettings }) {
                     <Instagram className="h-4 w-4" aria-hidden />
                   </a>
                 )}
+
                 {brand.zalo && (
                   <a
                     href={`https://zalo.me/${brand.zalo.replace(/\D/g, '')}`}
@@ -110,7 +158,9 @@ export function SiteFooter({ brand }: { brand: BrandSettings }) {
           </div>
 
           <FooterColumn title="Sản phẩm" links={PRODUCT_LINKS} />
+
           <FooterColumn title="Hỗ trợ" links={SUPPORT_LINKS} />
+
           <FooterColumn title="Chính sách" links={POLICY_LINKS} />
         </div>
 
@@ -118,6 +168,7 @@ export function SiteFooter({ brand }: { brand: BrandSettings }) {
           <p>
             © {year} {brand.name}. Bảo lưu mọi quyền.
           </p>
+
           <p>{brand.slogan}</p>
         </div>
       </div>
@@ -125,14 +176,29 @@ export function SiteFooter({ brand }: { brand: BrandSettings }) {
   );
 }
 
-function FooterColumn({ title, links }: { title: string; links: { href: string; label: string }[] }) {
+function FooterColumn({
+  title,
+  links,
+}: {
+  title: string;
+  links: {
+    href: string;
+    label: string;
+  }[];
+}) {
   return (
     <nav aria-label={title}>
-      <h2 className="mb-3.5 font-heading text-sm font-semibold text-ink">{title}</h2>
+      <h2 className="mb-3.5 font-heading text-sm font-semibold text-ink">
+        {title}
+      </h2>
+
       <ul className="space-y-2.5">
         {links.map((link) => (
           <li key={link.href}>
-            <Link href={link.href} className="text-sm text-muted transition-colors hover:text-primary">
+            <Link
+              href={link.href}
+              className="text-sm text-muted transition-colors hover:text-primary"
+            >
               {link.label}
             </Link>
           </li>
