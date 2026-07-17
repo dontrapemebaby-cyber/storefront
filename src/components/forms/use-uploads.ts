@@ -142,7 +142,9 @@ export function useUploads({ maxBytes, maxFiles = MAX_FILES, ensureSession }: Us
           signedUrl?: string;
         };
 
-        if (!initRes.ok || !initBody.uploadId || !initBody.signedUrl) {
+        const { uploadId, signedUrl } = initBody;
+
+        if (!initRes.ok || !uploadId || !signedUrl) {
           patch(item.localId, {
             status: 'error',
             progress: 0,
@@ -151,7 +153,6 @@ export function useUploads({ maxBytes, maxFiles = MAX_FILES, ensureSession }: Us
           return;
         }
 
-        const uploadId = initBody.uploadId;
         patch(item.localId, { uploadId, status: 'uploading', progress: 1 });
 
         // Bước 2: PUT trực tiếp lên Supabase Storage.
@@ -159,7 +160,7 @@ export function useUploads({ maxBytes, maxFiles = MAX_FILES, ensureSession }: Us
           const xhr = new XMLHttpRequest();
           xhrRefs.current.set(item.localId, xhr);
 
-          xhr.open('PUT', initBody.signedUrl, true);
+          xhr.open('PUT', signedUrl, true);
           xhr.timeout = STORAGE_TIMEOUT_MS;
           xhr.setRequestHeader('content-type', item.mimeType);
           xhr.setRequestHeader('cache-control', 'max-age=3600');
